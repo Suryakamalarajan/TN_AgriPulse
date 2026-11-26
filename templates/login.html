@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}TN AgriPulse | Secure Login{% endblock %}
+
+{% block content %}
+<section class="auth-section login-section">
+  <div class="container">
+    <div class="login-heading text-center">
+      <span class="eyebrow text-success">Tamil Nadu Agricultural Intelligence</span>
+      <h1>TN AgriPulse</h1>
+      <p>Tamil Nadu Agriculture Market Analytics System</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-5 col-md-6">
+        <div class="auth-card login-card h-100">
+          <div class="login-card-icon user-icon" aria-hidden="true"><i class="bi bi-person"></i></div>
+          <h2>User Login</h2>
+          <p class="login-card-copy">Explore dashboards, market prices, charts, and reports with read-only access.</p>
+          <form method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="login_type" value="user" />
+            <div class="mb-3">
+              <label for="userUsername" class="form-label">Username</label>
+              <input type="text" class="form-control" id="userUsername" name="username" autocomplete="username" required />
+            </div>
+            <div class="mb-4">
+              <label for="userPassword" class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="userPassword" name="password" autocomplete="current-password" required />
+                <button class="btn btn-outline-secondary password-toggle" type="button" data-password-target="userPassword" aria-label="Show password">Show</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login as User</button>
+          </form>
+          <p class="text-center mt-3 mb-0">
+            New to TN AgriPulse? <a href="{{ url_for('register') }}">Create a user account</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="col-lg-5 col-md-6">
+        <div class="auth-card login-card admin-login-card h-100">
+          <div class="login-card-icon admin-icon" aria-hidden="true"><i class="bi bi-shield-lock"></i></div>
+          <h2>Administrator Login</h2>
+          <p class="login-card-copy">Authorized administrators can manage market records and upload datasets.</p>
+          <form method="POST" action="{{ url_for('login') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="hidden" name="login_type" value="admin" />
+            <div class="mb-3">
+              <label for="adminUsername" class="form-label">Username</label>
+              <input type="text" class="form-control" id="adminUsername" name="username" autocomplete="username" required />
+            </div>
+            <div class="mb-4">
+              <label for="adminPassword" class="form-label">Password</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="adminPassword" name="password" autocomplete="current-password" required />
+                <button class="btn btn-outline-secondary password-toggle" type="button" data-password-target="adminPassword" aria-label="Show password">Show</button>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Login as Administrator</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <p class="login-security-note text-center mt-4">
+      <i class="bi bi-lock-fill me-1" aria-hidden="true"></i>
+      User registration creates read-only accounts. Administrator access is restricted to authorized accounts.
+    </p>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.querySelectorAll('.password-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const input = document.getElementById(button.dataset.passwordTarget);
+      const showPassword = input.type === 'password';
+      input.type = showPassword ? 'text' : 'password';
+      button.textContent = showPassword ? 'Hide' : 'Show';
+      button.setAttribute('aria-label', `${showPassword ? 'Hide' : 'Show'} password`);
+    });
+  });
+</script>
+{% endblock %}

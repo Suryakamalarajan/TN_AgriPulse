@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}TN AgriPulse | Analytics{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <span class="eyebrow">Analytics</span>
+    <h2>Price Analysis and Reports</h2>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div id="analyticsEmpty" class="empty-state d-none">
+      <h3>No verified market-price data is available yet.</h3>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Average modal price by crop</h4>
+          <canvas id="cropAverageChart"></canvas>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Market price difference by commodity and date</h4>
+          <canvas id="marketDifferenceChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-panel">
+      <h4>Historical price change trend</h4>
+      <canvas id="trendHistoryChart"></canvas>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/analytics.js') }}"></script>
+{% endblock %}

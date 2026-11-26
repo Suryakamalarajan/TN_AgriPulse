@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %}TN AgriPulse | Dashboard{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <span class="eyebrow">Agri Dashboard</span>
+        <h2>Welcome, {{ session.get('user_name', 'Farmer') }}</h2>
+      </div>
+      {% if session.get('role') == 'ADMIN' %}
+        <form method="POST" action="{{ url_for('refresh_data') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="btn btn-success" type="submit">Refresh Government Data</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div id="dashboardDataNotice" class="alert alert-danger d-none" role="alert"></div>
+    {% if stats.demo_records|default(0) > 0 %}
+      <div class="alert alert-warning" role="status">
+        <strong>DEMO DATA:</strong> {{ stats.demo_records }} illustrative sample prices are included; they are not verified live market rates.
+      </div>
+    {% endif %}
+
+    <div class="row g-4 mb-4">
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Total market records</span>
+          <strong>{{ stats.total_records|default(0) }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Districts</span>
+          <strong>{{ stats.distinct_districts|default(0) }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Commodities</span>
+          <strong>{{ stats.distinct_crops|default(0) }}</strong>
+        </div>
+      </div>
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Average modal price</span>
+          <strong>₹{{ '%.2f'|format(stats.average_modal_price|default(0)) }} /Qtl</strong>
+        </div>
+      </div>
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Highest modal price</span>
+          <strong>₹{{ '%.2f'|format(stats.highest_modal_price|default(0)) }} /Qtl</strong>
+        </div>
+      </div>
+      <div class="col-6 col-xl-2">
+        <div class="stat-card">
+          <span>Lowest modal price</span>
+          <strong>₹{{ '%.2f'|format(stats.lowest_modal_price|default(0)) }} /Qtl</strong>
+        </div>
+      </div>
+    </div>
+
+    {% if stats.total_records == 0 %}
+      <div class="empty-state">
+        <h3>No market-price records are available yet.</h3>
+        <p>Add market records or refresh official government data after configuring your API key.</p>
+      </div>
+    {% else %}
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="card-panel">
+            <h4>Crop-wise modal-price comparison</h4>
+            <div class="chart-container">
+              <canvas id="cropChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card-panel">
+            <h4>Market-wise price comparison</h4>
+            <div class="chart-container">
+              <canvas id="marketChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-4 mb-4">
+        <div class="col-md-6">
+          <div class="card-panel">
+            <h4>Crop price range: min, modal and max</h4>
+            <div class="chart-container">
+              <canvas id="cropPriceRangeChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card-panel">
+            <h4>Average modal price by district</h4>
+            <div class="chart-container">
+              <canvas id="districtPriceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-panel mb-4">
+        <h4>Minimum and maximum prices by market</h4>
+        <div class="chart-container chart-container-compact">
+          <canvas id="marketPriceRangeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card-panel mb-4">
+        <h4>Available historical price trend by arrival date</h4>
+        <div class="chart-container chart-container-compact">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4>Recent market records</h4>
+          <a href="{{ url_for('market_prices') }}" class="btn btn-outline-primary btn-sm">View all</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped align-middle table-light">
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Market</th>
+                <th>Commodity</th>
+                <th>Arrival date</th>
+                <th>Modal price</th>
+                <th>Verification</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for record in recent_records %}
+              <tr>
+                <td>{{ record.district }}</td>
+                <td>{{ record.market }}</td>
+                <td>{{ record.commodity }}</td>
+                <td>{{ record.arrival_date }}</td>
+                <td>₹{{ '%.2f'|format(record.modal_price or 0) }}</td>
+                <td>
+                  {% if record.source|upper == 'DEMO' %}
+                    <span class="badge text-bg-warning">DEMO DATA</span>
+                  {% else %}
+                    <span class="badge text-bg-secondary">{{ record.verification_status|default('unverified') }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

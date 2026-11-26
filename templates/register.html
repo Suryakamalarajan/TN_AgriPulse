@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}TN AgriPulse | Create User Account{% endblock %}
+
+{% block content %}
+<section class="auth-section login-section">
+  <div class="container">
+    <div class="login-heading text-center">
+      <span class="eyebrow text-success">Read-only access</span>
+      <h1>Create your account</h1>
+      <p>Register to explore Tamil Nadu agriculture market analytics.</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-5 col-md-7">
+        <div class="auth-card login-card">
+          <div class="login-card-icon user-icon" aria-hidden="true"><i class="bi bi-person-plus"></i></div>
+          <h2>User Registration</h2>
+          <p class="login-card-copy">Your account can view dashboards and market reports, but cannot change data.</p>
+          <form method="POST" action="{{ url_for('register') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="mb-3">
+              <label for="fullName" class="form-label">Full name</label>
+              <input class="form-control" id="fullName" name="full_name" maxlength="150" autocomplete="name" required />
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input class="form-control" id="username" name="username" maxlength="191" autocomplete="username" required />
+              <div class="form-text">Choose a username without spaces.</div>
+            </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <div class="input-group">
+                <input class="form-control" id="password" name="password" type="password" minlength="12" autocomplete="new-password" required />
+                <button class="btn btn-outline-secondary password-toggle" type="button" aria-label="Show password">Show</button>
+              </div>
+              <div class="form-text">Use at least 12 characters.</div>
+            </div>
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label">Confirm password</label>
+              <input class="form-control" id="confirmPassword" name="confirm_password" type="password" minlength="12" autocomplete="new-password" required />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Create read-only account</button>
+          </form>
+          <p class="text-center mt-3 mb-0">
+            Already registered? <a href="{{ url_for('login') }}">Back to login</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const passwordInput = document.getElementById('password');
+  document.querySelector('.password-toggle').addEventListener('click', (event) => {
+    const button = event.currentTarget;
+    const showPassword = passwordInput.type === 'password';
+    passwordInput.type = showPassword ? 'text' : 'password';
+    button.textContent = showPassword ? 'Hide' : 'Show';
+    button.setAttribute('aria-label', `${showPassword ? 'Hide' : 'Show'} password`);
+  });
+</script>
+{% endblock %}

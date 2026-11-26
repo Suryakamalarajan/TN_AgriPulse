@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}TN AgriPulse | About{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div class="container">
+    <span class="eyebrow">About the Project</span>
+    <h2>Why TN AgriPulse exists</h2>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Project Purpose</h4>
+          <p>TN AgriPulse is an educational agricultural market intelligence project focused on Tamil Nadu crop prices, mandi trends, and simple data analysis for learning. It helps students understand how commodity data is gathered, cleaned, and visualized.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Technology Stack</h4>
+          <p>The application uses Python, Flask, SQLite/MySQL, HTML, CSS, JavaScript, Bootstrap, Pandas, NumPy, requests, and Chart.js to build a complete data analytics website.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Official Data Source</h4>
+          <p>The project is designed to use the official government dataset available on data.gov.in, titled “Current Daily Price of Various Commodities from Various Markets (Mandi)”. The application reads the API key from an environment variable and stores valid records after checking each response.</p>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card-panel">
+          <h4>Python Data Analytics</h4>
+          <p>Python and Pandas are used to clean, summarize, compare, and visualize agricultural records. This helps users understand price differences, crop averages, market comparisons, and historical trends.</p>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="card-panel">
+          <h4>Educational Scope and Limitations</h4>
+          <p>This project is for academic learning and demonstration. It does not claim to be an official government portal, and data may be limited by API availability, field completeness, or local database updates. Users should compare records carefully and keep unit, date, and commodity compatibility in mind.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
